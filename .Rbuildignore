@@ -3,4 +3,4 @@
 ^README\.Rmd$
 ^LICENSE\.md$
 ^CODE_OF_CONDUCT\.md$
-demo/*\.R
+^demo\.R
