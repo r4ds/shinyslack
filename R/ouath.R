@@ -78,7 +78,7 @@ slack_shiny_ui <- function(ui, team_id, site_url) {
       shinycookie::initShinyCookie("shinycookie"),
       # Add the code to add the cookie.
       set_cookie(
-        token = token,
+        contents = token,
         cookie_name = .slack_token_cookie_name(team_id)
       ),
       # Reload the page to re-process the request.
