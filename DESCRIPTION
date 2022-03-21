@@ -16,8 +16,10 @@ Imports:
     httpuv,
     shiny,
     shinycookie,
+    slackcalls,
     slackteams,
     stats
 Remotes: 
     colearendt/shinycookie,
+    yonicd/slackcalls,
     yonicd/slackteams
