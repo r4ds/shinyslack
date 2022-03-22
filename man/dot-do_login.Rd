@@ -4,9 +4,11 @@
 \alias{.do_login}
 \title{Perform the Login Via Slack}
 \usage{
-.do_login(site_url, team_id)
+.do_login(request, site_url, team_id)
 }
 \arguments{
+\item{request}{The shiny request object to parse.}
+
 \item{site_url}{The URL of the Shiny app. This is used to return the user to
 the app from the Slack login.}
 

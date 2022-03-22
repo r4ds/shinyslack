@@ -19,10 +19,22 @@ slack_shiny_ui <- function(ui, team_id, site_url) {
     } else if (.has_auth_code(request)) {
       # Case 2: They are returning from the oauth endpoint, which has granted
       # them authorization. The url will now have a `code` parameter.
-      return(.parse_auth_code(request, site_url, team_id))
+      return(
+        .parse_auth_code(
+          request = request,
+          site_url = site_url,
+          team_id = team_id
+        )
+      )
     } else {
       # Case 3: They have neither a token nor a code to exchange for a token.
-      .do_login(site_url = site_url, team_id = team_id)
+      return(
+        .do_login(
+          request = request,
+          site_url = site_url,
+          team_id = team_id
+        )
+      )
     }
   }
 }
@@ -67,6 +79,7 @@ slack_shiny_ui <- function(ui, team_id, site_url) {
   # as a parameter. 100% of this should occur in javascript. Show a GDPR
   # thing on this screen, just use the oauth_token parameter in the URL if
   # they don't accept.
+  site_url <- .update_site_url(site_url, request)
   token <- slackteams::add_team_code(
     code = .extract_auth_code(request),
     redirect_uri = site_url,
@@ -98,14 +111,14 @@ slack_shiny_ui <- function(ui, team_id, site_url) {
 #' @return A \code{\link[shiny]{tagList}} that sends the user to the proper
 #'   Slack api URL in order to authenticate.
 #' @keywords internal
-.do_login <- function(site_url, team_id) {
+.do_login <- function(request, site_url, team_id) {
   # To do (probably places other than here): Deal with state. That makes things
   # more secure, but I need to wrap my head around it.
 
   # We also need to sort out cookie stuff for EU here, ideally.
   auth_url <- slackteams::auth_url(
     scopes = slackteams::load_scopes(which = "slackverse"),
-    redirect_uri = site_url,
+    redirect_uri = .update_site_url(site_url, request),
     team_code = team_id
   )
   return(
@@ -134,4 +147,22 @@ check_login <- function(input, team_id) {
     )
     auth_test$ok && auth_test$team_id == team_id
   })
+}
+
+#' Keep Url Bits
+#'
+#' @inheritParams .shared-parameters
+#'
+#' @return The site_url with query parameters included.
+#' @keywords internal
+.update_site_url <- function(site_url, request) {
+  # First extract any query parameters that are there other than the code.
+  query_list <- shiny::parseQueryString(request$QUERY_STRING)
+  query_list$code <- NULL
+  # For the moment I'm explicitly setting blank things to NULL, but that might
+  # change.
+  query_list[query_list == ""] <- NULL
+  url_list <- httr::parse_url(site_url)
+  url_list$query <- c(url_list$query, query_list)
+  return(httr::build_url(url_list))
 }
