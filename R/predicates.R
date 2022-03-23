@@ -18,13 +18,13 @@ NULL
 
 #' @rdname request-predicates
 .has_cookie_token <- function(request, team_id) {
+  cookie_token <- .extract_cookie(
+    request,
+    .slack_token_cookie_name(team_id)
+  )
+
   return(
-    !is.na(
-      .extract_cookie(
-        request,
-        .slack_token_cookie_name(team_id)
-      )
-    )
+    !is.na(cookie_token) && .validate_cookie_token(cookie_token, team_id)
   )
 }
 
