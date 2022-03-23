@@ -1,13 +1,6 @@
 # Launch the ShinyApp (Do not remove this comment)
 # To deploy, run: rsconnect::deployApp()
 # Or use the blue button on top of this file
-
-# Switch this for shinyapps.
-site_url <- "http://127.0.0.1:4242/"
-# site_url <- "https://r4dscommunity.shinyapps.io/shinyslack/"
-
-team_id <- "T6UC1DKJQ"
-
 pkgload::load_all(
   export_all = FALSE,
   helpers = FALSE,
@@ -15,10 +8,26 @@ pkgload::load_all(
   quiet = TRUE
 )
 
-library(shiny)
+if (interactive()) {
+  site_url <- "http://127.0.0.1:4242/"
+  options <- list(
+    port = 4242L,
+    launch.browser = TRUE
+  )
+} else {
+  site_url <- "https://r4dscommunity.shinyapps.io/shinyslack/"
+  options <- list()
+}
 
-ui <- fluidPage(
-  textOutput("user_name")
+team_id <- "T6UC1DKJQ"
+shinyslack_key <- readLines(".secret", 1)
+
+Sys.setenv(
+  shinyslack_key = shinyslack_key
+)
+
+ui <- shiny::fluidPage(
+  shiny::textOutput("user_name")
 )
 
 server <- function(input, output, session) {
@@ -50,8 +59,5 @@ shiny::shinyApp(
     site_url = site_url
   ),
   server = server,
-  options = list(
-    port = 4242L,
-    launch.browser = TRUE
-  )
+  options = options
 )

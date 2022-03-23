@@ -9,7 +9,7 @@
   cookies <- .extract_cookies(request = request)
 
   if (length(cookies) && cookie_name %in% names(cookies)) {
-    return(cookies[cookie_name])
+    return(cookies[[cookie_name]])
   } else {
     return(NA_character_)
   }

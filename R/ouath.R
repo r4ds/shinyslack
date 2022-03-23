@@ -85,6 +85,8 @@ slack_shiny_ui <- function(ui, team_id, site_url) {
     redirect_uri = site_url,
     verbose = FALSE
   )
+  token <- .shinyslack_encrypt(token)
+
   return(
     shiny::tagList(
       # Set up javascript for handling cookies.
@@ -157,6 +159,8 @@ check_login <- function(input, team_id) {
 #'   authentication for this team.
 #' @keywords internal
 .validate_cookie_token <- function(cookie_token, team_id) {
+  cookie_token <- .shinyslack_decrypt(cookie_token)
+
   Sys.setenv(
     SLACK_API_TOKEN = cookie_token
   )
