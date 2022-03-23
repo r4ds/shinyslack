@@ -138,15 +138,32 @@ slack_shiny_ui <- function(ui, team_id, site_url) {
 #'   whether the user is logged in with proper API access.
 #' @export
 check_login <- function(input, team_id) {
-  shiny::reactive({
-    Sys.setenv(
-      SLACK_API_TOKEN = input$shinycookie[[.slack_token_cookie_name(team_id)]]
-    )
-    auth_test <- slackcalls::post_slack(
-      slack_method = "auth.test"
-    )
-    auth_test$ok && auth_test$team_id == team_id
-  })
+  return(
+    shiny::reactive({
+      .validate_cookie_token(
+        cookie_token = input$shinycookie[[.slack_token_cookie_name(team_id)]],
+        team_id = team_id
+      )
+    })
+  )
+}
+
+#' Make Sure a Cookie Token Works
+#'
+#' @inheritParams .shared-parameters
+#' @param cookie_token A character with the code used to authenticate the user.
+#'
+#' @return A logical indicating whether the token works for testing
+#'   authentication for this team.
+#' @keywords internal
+.validate_cookie_token <- function(cookie_token, team_id) {
+  Sys.setenv(
+    SLACK_API_TOKEN = cookie_token
+  )
+  auth_test <- slackcalls::post_slack(
+    slack_method = "auth.test"
+  )
+  auth_test$ok && auth_test$team_id == team_id
 }
 
 #' Keep Url Bits
