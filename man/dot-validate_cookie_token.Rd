@@ -7,7 +7,7 @@
 .validate_cookie_token(cookie_token, team_id)
 }
 \arguments{
-\item{cookie_token}{A cookie that contains a Slack token.}
+\item{cookie_token}{A character with the code used to authenticate the user.}
 
 \item{team_id}{The Slack team ID through which the user is being
 authenticated.}

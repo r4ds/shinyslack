@@ -20,8 +20,11 @@ Imports:
     shinycookie,
     slackcalls,
     slackteams,
+    sodium,
     stats
 Remotes: 
     colearendt/shinycookie,
     yonicd/slackcalls,
     yonicd/slackteams
+Depends: 
+    R (>= 2.10)
