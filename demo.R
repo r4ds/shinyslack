@@ -31,21 +31,9 @@ ui <- shiny::fluidPage(
 )
 
 server <- function(input, output, session) {
-  is_logged_in <- check_login(input, team_id)
-
-  username <- shiny::reactive({
-    shiny::req(is_logged_in())
-    user_info <- slackcalls::post_slack(
-      slack_method = "auth.test"
-    )
-
-    # Log the current user.
-    message(
-      "***** Login by: ",
-      user_info$user
-    )
-    user_info$user
-  })
+  username <- user_info(
+    components = "user_name"
+  )
 
   output$user_name <- shiny::renderText(
     username()

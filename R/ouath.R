@@ -167,6 +167,7 @@ check_login <- function(input, team_id) {
   auth_test <- slackcalls::post_slack(
     slack_method = "auth.test"
   )
+
   auth_test$ok && auth_test$team_id == team_id
 }
 

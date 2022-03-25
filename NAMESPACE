@@ -3,3 +3,4 @@
 export(check_login)
 export(set_cookie)
 export(slack_shiny_ui)
+export(user_info)
