@@ -15,7 +15,6 @@ BugReports: https://github.com/r4ds/shinyslack/issues
 Imports: 
     httpuv,
     httr,
-    pkgload,
     shiny,
     shinycookie,
     slackcalls,
@@ -28,3 +27,5 @@ Remotes:
     yonicd/slackteams
 Depends: 
     R (>= 2.10)
+Suggests: 
+    pkgload
