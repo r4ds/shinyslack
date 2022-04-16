@@ -114,19 +114,21 @@ slack_shiny_ui <- function(ui, team_id, site_url) {
 #'   Slack api URL in order to authenticate.
 #' @keywords internal
 .do_login <- function(request, site_url, team_id) {
-  # To do (probably places other than here): Deal with state. That makes things
-  # more secure, but I need to wrap my head around it.
-
-  # We also need to sort out cookie stuff for EU here, ideally.
   auth_url <- slackteams::auth_url(
     scopes = slackteams::load_scopes(which = "slackverse"),
     redirect_uri = .update_site_url(site_url, request),
     team_code = team_id
   )
   return(
-    shiny::tags$script(
-      shiny::HTML(
-        sprintf("location.replace(\"%s\");", auth_url)
+    shiny::tagList(
+      shiny::p(
+        "Login via Slack to access this site."
+      ),
+      shiny::a(
+        href = auth_url,
+        style = .slack_button_style,
+        shiny::HTML(.slack_logo_svg),
+        "Sign in with Slack"
       )
     )
   )
