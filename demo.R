@@ -20,11 +20,6 @@ if (interactive()) {
 }
 
 team_id <- "T6UC1DKJQ"
-shinyslack_key <- readLines(".secret", 1)
-
-Sys.setenv(
-  shinyslack_key = shinyslack_key
-)
 
 ui <- shiny::fluidPage(
   shiny::textOutput("user_name")

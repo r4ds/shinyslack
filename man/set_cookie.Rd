@@ -20,6 +20,5 @@ to set the cookie.
 }
 \description{
 This function generates javascript which will set a cookie in the user's
-browser. It requires that the cookie javascript is already initialized using
-\code{\link[shinycookie]{initShinyCookie}}.
+browser.
 }

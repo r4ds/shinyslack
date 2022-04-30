@@ -52,11 +52,31 @@
   )
 }
 
+#' Add the js-cookie Javascript Library
+#'
+#' We only use the \code{set} method from this library for easier cookie
+#' handling, but we make it easy to add the library in case you wish to
+#' manipulate cookies.
+#'
+#' @return An html_dependency, which Shiny uses to add the js-cookie Javascript
+#'   library exactly once.
+#' @export
+include_js_cookie <- function() {
+  return(
+    htmltools::htmlDependency(
+      name = "js-cookie",
+      version = "2.2.0",
+      src = "www",
+      package = "shinyslack",
+      script = "js.cookie.js"
+    )
+  )
+}
+
 #' Shiny Tags to Add Cookies
 #'
 #' This function generates javascript which will set a cookie in the user's
-#' browser. It requires that the cookie javascript is already initialized using
-#' \code{\link[shinycookie]{initShinyCookie}}.
+#' browser.
 #'
 #' @param contents The contents of the cookie. Right now this should be a single
 #'   character value.
@@ -68,15 +88,39 @@
 #' @export
 set_cookie <- function(contents, cookie_name, expiration = 90) {
   return(
-    shiny::tags$script(
-      shiny::HTML(
-        sprintf(
-          "Cookies.set('%s', '%s', { expires: %i });",
-          cookie_name,
-          contents,
-          expiration
+    shiny::tagList(
+      include_js_cookie(),
+      shiny::tags$script(
+        shiny::HTML(
+          sprintf(
+            "Cookies.set('%s', '%s', { expires: %i });",
+            cookie_name,
+            contents,
+            expiration
+          )
         )
       )
     )
   )
+}
+
+#' Make Sure a Cookie Token Works
+#'
+#' @inheritParams .shared-parameters
+#' @param cookie_token A character with the code used to authenticate the user.
+#'
+#' @return A logical indicating whether the token works for testing
+#'   authentication for this team.
+#' @keywords internal
+.validate_cookie_token <- function(cookie_token, team_id) {
+  cookie_token <- .shinyslack_decrypt(cookie_token)
+
+  Sys.setenv(
+    SLACK_API_TOKEN = cookie_token
+  )
+  auth_test <- slackcalls::post_slack(
+    slack_method = "auth.test"
+  )
+
+  auth_test$ok && auth_test$team_id == team_id
 }
