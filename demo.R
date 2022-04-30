@@ -26,13 +26,19 @@ ui <- shiny::fluidPage(
 )
 
 server <- function(input, output, session) {
+  is_logged_in <- check_login(
+    input = input,
+    team_id = team_id
+  )
+
   username <- user_info(
     components = "user_name"
   )
 
-  output$user_name <- shiny::renderText(
+  output$user_name <- shiny::renderText({
+    shiny::req(is_logged_in())
     username()
-  )
+  })
 }
 
 shiny::shinyApp(

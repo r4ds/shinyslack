@@ -13,7 +13,6 @@
 #'   without).
 #' @export
 slack_shiny_ui <- function(ui, team_id, site_url, expiration = 90) {
-  force(ui)
   return(
     function(request) {
       if (.has_token(request, team_id)) {
@@ -65,7 +64,12 @@ slack_shiny_ui <- function(ui, team_id, site_url, expiration = 90) {
       ui <- ui()
     }
   }
-  return(ui)
+  return(
+    shiny::tagList(
+      include_cookies(),
+      ui
+    )
+  )
 }
 
 #' Convert a Slack Authorization Code to a Token

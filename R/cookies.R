@@ -56,19 +56,19 @@
 #'
 #' We only use the \code{set} method from this library for easier cookie
 #' handling, but we make it easy to add the library in case you wish to
-#' manipulate cookies.
+#' manipulate cookies. We also load the cookie object into the input.
 #'
 #' @return An html_dependency, which Shiny uses to add the js-cookie Javascript
 #'   library exactly once.
 #' @export
-include_js_cookie <- function() {
+include_cookies <- function() {
   return(
     htmltools::htmlDependency(
-      name = "js-cookie",
-      version = "2.2.0",
+      name = "shinyslack",
+      version = "1.0.0",
       src = "www",
       package = "shinyslack",
-      script = "js.cookie.js"
+      script = c("js.cookie.js", "cookie_input.js")
     )
   )
 }
@@ -89,7 +89,7 @@ include_js_cookie <- function() {
 set_cookie <- function(contents, cookie_name, expiration = 90) {
   return(
     shiny::tagList(
-      include_js_cookie(),
+      include_cookies(),
       shiny::tags$script(
         shiny::HTML(
           sprintf(
@@ -123,4 +123,27 @@ set_cookie <- function(contents, cookie_name, expiration = 90) {
   )
 
   auth_test$ok && auth_test$team_id == team_id
+}
+
+#' Check Slack Login
+#'
+#' Confirm that a user is logged into Slack.
+#'
+#' @inheritParams .shared-parameters
+#'
+#' @return A \code{\link[shiny]{reactive}} which returns a logical indicating
+#'   whether the user is logged in with proper API access.
+#' @export
+check_login <- function(input, team_id) {
+  return(
+    shiny::reactive({
+      slack_cookie <- input$cookies[[.slack_token_cookie_name(team_id)]]
+      return(
+        !is.null(slack_cookie) && .validate_cookie_token(
+          cookie_token = slack_cookie,
+          team_id = team_id
+        )
+      )
+    })
+  )
 }
