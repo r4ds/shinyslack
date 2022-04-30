@@ -8,3 +8,4 @@
 ^\.secret
 ^data-raw$
 ^\.github$
+^\.Renviron$

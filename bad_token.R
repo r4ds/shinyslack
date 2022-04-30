@@ -7,8 +7,6 @@ team_id <- "T6UC1DKJQ"
 devtools::load_all(".")
 
 ui <- shiny::fluidPage(
-  # Set up javascript for handling cookies.
-  shinycookie::initShinyCookie("shinycookie"),
   # Add the code to add the cookie.
   set_cookie(
     contents = "bad_token",

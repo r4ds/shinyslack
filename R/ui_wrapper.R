@@ -1,42 +1,50 @@
 #' Require Slack login to a Shiny app
 #'
-#' This function is intended to wrap a Shiny ui. If the user does not have a
+#'
+#' This is a function factory that wraps a Shiny ui. If the user does not have a
 #' cookie for that site, they are prompted to login. Once they have a cookie,
 #' the UI displays as normal.
 #'
 #' @inheritParams .parse_ui
 #' @inheritParams .parse_auth_code
+#' @param expiration Days after which the user's login cookie should expire.
 #'
 #' @return A function defining the UI of a Shiny app (either with login or
 #'   without).
 #' @export
-slack_shiny_ui <- function(ui, team_id, site_url) {
+slack_shiny_ui <- function(ui, team_id, site_url, expiration = 90) {
   force(ui)
-  function(request) {
-    if (.has_token(request, team_id)) {
-      # Case 1: They already have a token. In this case we return the actual ui.
-      return(.parse_ui(ui, request))
-    } else if (.has_auth_code(request)) {
-      # Case 2: They are returning from the oauth endpoint, which has granted
-      # them authorization. The url will now have a `code` parameter.
-      return(
-        .parse_auth_code(
-          request = request,
-          site_url = site_url,
-          team_id = team_id
+  return(
+    function(request) {
+      if (.has_token(request, team_id)) {
+        # Case 1: They already have a token. In this case we return the ui.
+        # Note: .has_token has already parsed their token and set it as the
+        # SLACK_API_TOKEN environment variable used by slackcalls, so no further
+        # validation is needed by apps that wish to use Slack.
+        return(.parse_ui(ui, request))
+      } else if (.has_auth_code(request)) {
+        # Case 2: They are returning from the oauth endpoint, which has granted
+        # them authorization. The url will now have a `code` parameter.
+        return(
+          .parse_auth_code(
+            request = request,
+            site_url = site_url,
+            team_id = team_id,
+            expiration = expiration
+          )
         )
-      )
-    } else {
-      # Case 3: They have neither a token nor a code to exchange for a token.
-      return(
-        .do_login(
-          request = request,
-          site_url = site_url,
-          team_id = team_id
+      } else {
+        # Case 3: They have neither a token nor a code to exchange for a token.
+        return(
+          .do_login(
+            request = request,
+            site_url = site_url,
+            team_id = team_id
+          )
         )
-      )
+      }
     }
-  }
+  )
 }
 
 #' Prepare a Shiny UI for Display
@@ -49,7 +57,7 @@ slack_shiny_ui <- function(ui, team_id, site_url) {
 #' @keywords internal
 .parse_ui <- function(ui, request) {
   # ui can be a tagList, a 0-argument function, or a 1-argument function. Deal
-  # with those. We need to add the cookie handler to that UI.
+  # with those.
   if (is.function(ui)) {
     if (length(formals(ui))) {
       ui <- ui(request)
@@ -57,44 +65,42 @@ slack_shiny_ui <- function(ui, team_id, site_url) {
       ui <- ui()
     }
   }
-  return(
-    shiny::tagList(
-      shinycookie::initShinyCookie("shinycookie"),
-      ui
-    )
-  )
+  return(ui)
 }
 
 #' Convert a Slack Authorization Code to a Token
 #'
 #' @inheritParams .shared-parameters
+#' @inheritParams set_cookie
 #'
 #' @return A \code{\link[shiny]{tagList}} that sets the cookie then reloads the
 #'   site.
 #' @keywords internal
-.parse_auth_code <- function(request, site_url, team_id) {
+.parse_auth_code <- function(request, site_url, team_id, expiration) {
   # Do the call to the access url to exchange the code for a token, then
   # save that token in a cookie and redirect them to the base url of this
-  # site. If they don't allow you to save a cookie, put the token in the url
-  # as a parameter. 100% of this should occur in javascript. Show a GDPR
-  # thing on this screen, just use the oauth_token parameter in the URL if
-  # they don't accept.
+  # site.
+
+  # Pass along query parameters from the request.
   site_url <- .update_site_url(site_url, request)
+
+  # Exchange the code for a token.
   token <- slackteams::add_team_code(
     code = .extract_auth_code(request),
     redirect_uri = site_url,
     verbose = FALSE
   )
+
+  # Encrypt the token before saving it in a cookie.
   token <- .shinyslack_encrypt(token)
 
+  # Have the browser set the cookie then reload.
   return(
     shiny::tagList(
-      # Set up javascript for handling cookies.
-      shinycookie::initShinyCookie("shinycookie"),
-      # Add the code to add the cookie.
       set_cookie(
         contents = token,
-        cookie_name = .slack_token_cookie_name(team_id)
+        cookie_name = .slack_token_cookie_name(team_id),
+        expiration = expiration
       ),
       # Reload the page to re-process the request.
       shiny::tags$script(
@@ -132,45 +138,6 @@ slack_shiny_ui <- function(ui, team_id, site_url) {
       )
     )
   )
-}
-
-#' Confirm that the User is Logged In
-#'
-#' @inheritParams .shared-parameters
-#'
-#' @return A \code{\link[shiny]{reactive}} which returns a logical indicating
-#'   whether the user is logged in with proper API access.
-#' @export
-check_login <- function(input, team_id) {
-  return(
-    shiny::reactive({
-      .validate_cookie_token(
-        cookie_token = input$shinycookie[[.slack_token_cookie_name(team_id)]],
-        team_id = team_id
-      )
-    })
-  )
-}
-
-#' Make Sure a Cookie Token Works
-#'
-#' @inheritParams .shared-parameters
-#' @param cookie_token A character with the code used to authenticate the user.
-#'
-#' @return A logical indicating whether the token works for testing
-#'   authentication for this team.
-#' @keywords internal
-.validate_cookie_token <- function(cookie_token, team_id) {
-  cookie_token <- .shinyslack_decrypt(cookie_token)
-
-  Sys.setenv(
-    SLACK_API_TOKEN = cookie_token
-  )
-  auth_test <- slackcalls::post_slack(
-    slack_method = "auth.test"
-  )
-
-  auth_test$ok && auth_test$team_id == team_id
 }
 
 #' Keep Url Bits
