@@ -4,7 +4,7 @@
 \alias{user_info}
 \title{Fetch Slack User Info}
 \usage{
-user_info(components = c("user_name", "user_id"), simplify = FALSE)
+user_info(components = c("user_name", "user_id"))
 }
 \arguments{
 \item{components}{A character vector of user components to include

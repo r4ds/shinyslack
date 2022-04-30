@@ -7,8 +7,7 @@
 #'
 #' @return A \code{\link[shiny]{reactive}} with a named character vector.
 #' @export
-user_info <- function(components = c("user_name", "user_id"),
-                      simplify = FALSE) {
+user_info <- function(components = c("user_name", "user_id")) {
   components <- match.arg(components, several.ok = TRUE)
   return(
     shiny::reactive({
