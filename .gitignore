@@ -6,3 +6,4 @@
 rsconnect
 .secret
 .Renviron
+inst/doc

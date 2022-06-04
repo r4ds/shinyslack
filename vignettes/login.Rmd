@@ -1,0 +1,60 @@
+---
+title: "Add a Slack Login to a shiny app"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Add a Slack Login to a shiny app}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  eval = FALSE
+)
+```
+
+The shinyslack package makes it easy to add a Slack login to a shiny app.
+
+Imagine you have a shiny app in an `app.R` file.
+
+```{r basic-shiny}
+library(shiny)
+ui <- fluidPage(
+  "This is my super secret data."
+)
+server <- function(input, output, session) {
+}
+shinyApp(ui, server)
+```
+
+`{shinyslack}` makes it easy to require a Slack login before the user can view that app.
+Simply replace the call to `shinyApp()` with a call to `shiny_slack_app()`.
+
+```{r basic-shinyslack}
+library(shiny)
+library(shinyslack)
+ui <- fluidPage(
+  "This is my super secret data."
+)
+server <- function(input, output, session) {
+}
+shiny_slack_app(
+  ui, server, 
+  team_id = "T6UC1DKJQ", 
+  site_url = "https://myaccount.shinyapps.io/myapp/"
+)
+```
+
+The `site_url` is only necessary if you deploy your app.
+The login workflow needs this url to know where to send the user back to after logging in.
+
+## Finding your team_id
+
+The `team_id` shown here is the ID for the [R4DS Online Learning Community Slack](r4ds.io/join).
+You can find your `team_id` in a few ways:
+
+- Open your Slack team in a web browser. The url will display as something like `https://app.slack.com/client/T6UC1DKJQ/C8J63E0TA`, where the string immediately after `client/` is your `team_id`.
+- In the Slack desktop app, click the name of your team at the top-left corner of the app. Choose the first link below the team name, which will say something like "See plans". The url will be something like `https://app.slack.com/plans/T6UC1DKJQ`, where the string after `plans/` is your `team_id`.
+
