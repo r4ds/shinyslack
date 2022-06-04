@@ -1,3 +1,52 @@
+#' Launch a Shiny App with a Slack Login
+#'
+#' @inheritParams slack_shiny_ui
+#' @inheritParams shiny::shinyApp
+#' @param ... Additional parameters passed on to \code{\link[shiny]{shinyApp}}.
+#' @importFrom rlang %||%
+#'
+#' @return An object that represents the app. See \code{\link[shiny]{shinyApp}}
+#'   for details.
+#' @export
+shinyslack_app <- function(ui,
+                           server,
+                           team_id,
+                           site_url = NULL,
+                           expiration = 90,
+                           ...) {
+  dots <- rlang::list2(...)
+  options <- dots$options %||% list()
+  dots$options <- NULL
+  if (interactive()) {
+    options$port <- options$port %||% 4242L
+    site_url <- paste0("http://127.0.0.1:", options$port)
+    options$launch.browser <- TRUE
+  }
+
+  if (is.null(site_url)) {
+    rlang::abort(
+      "You must supply a site_url to shinyslack_app in non-interactive mode.",
+      class = "missing_site_url"
+    )
+  }
+
+  return(
+    rlang::exec(
+      shiny::shinyApp,
+      ui = slack_shiny_ui(
+        ui = ui,
+        team_id = team_id,
+        site_url = site_url,
+        expiration = expiration
+      ),
+      server = server,
+      options = options,
+      !!!dots
+    )
+  )
+}
+
+
 #' Require Slack login to a Shiny app
 #'
 #'
