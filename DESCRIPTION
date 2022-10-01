@@ -34,6 +34,7 @@ Imports:
     sodium,
     stats
 Remotes: 
+    r4ds/scenes,
     yonicd/slackcalls,
     yonicd/slackteams
 Depends: 
