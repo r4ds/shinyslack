@@ -7,8 +7,8 @@
 slack_shiny_ui(ui, team_id, site_url, expiration = 90)
 }
 \arguments{
-\item{ui}{A function defining the UI of a Shiny app, or a
-\code{\link[shiny]{tagList}}.}
+\item{ui}{A 0- or 1-argument function defining the UI of a Shiny app, or a
+\code{\link[shiny:reexports]{shiny::tagList()}}.}
 
 \item{team_id}{The Slack team ID through which the user is being
 authenticated.}

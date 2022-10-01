@@ -7,8 +7,8 @@
 shinyslack_app(ui, server, team_id, site_url = NULL, expiration = 90, ...)
 }
 \arguments{
-\item{ui}{A function defining the UI of a Shiny app, or a
-\code{\link[shiny]{tagList}}.}
+\item{ui}{A 0- or 1-argument function defining the UI of a Shiny app, or a
+\code{\link[shiny:reexports]{shiny::tagList()}}.}
 
 \item{server}{A function with three parameters: \code{input}, \code{output}, and
 \code{session}. The function is called once for each session ensuring that each

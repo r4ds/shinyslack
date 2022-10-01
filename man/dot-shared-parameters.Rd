@@ -4,6 +4,8 @@
 \alias{.shared-parameters}
 \title{Parameters Used in Various Functions}
 \arguments{
+\item{input}{The shiny input object.}
+
 \item{request}{The shiny request object to parse.}
 
 \item{site_url}{The URL of the Shiny app. This is used to return the user to
@@ -12,7 +14,8 @@ the app from the Slack login.}
 \item{team_id}{The Slack team ID through which the user is being
 authenticated.}
 
-\item{input}{The shiny input object.}
+\item{ui}{A 0- or 1-argument function defining the UI of a Shiny app, or a
+\code{\link[shiny:reexports]{shiny::tagList()}}.}
 }
 \description{
 Parameters Used in Various Functions
