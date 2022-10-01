@@ -9,3 +9,4 @@
 ^data-raw$
 ^\.github$
 ^\.Renviron$
+^R/_disable_autoload\.R$
