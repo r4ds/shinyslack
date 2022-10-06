@@ -10,9 +10,9 @@
 
 #' Add the js-cookie Javascript Library
 #'
-#' We only use the \code{set} method from this library for easier cookie
-#' handling, but we make it easy to add the library in case you wish to
-#' manipulate cookies. We also load the cookie object into the input.
+#' We only use the `set` method from this library for easier cookie handling,
+#' but we make it easy to add the library in case you wish to manipulate
+#' cookies. We also load the cookie object into the input.
 #'
 #' @return An html_dependency, which Shiny uses to add the js-cookie Javascript
 #'   library exactly once.
@@ -39,8 +39,8 @@ include_cookies <- function() {
 #' @param cookie_name A name for the cookie. Must be a valid cookie name.
 #' @param expiration Days after which the cookie should expire.
 #'
-#' @return A \code{\link[shiny]{tagList}} that provides the HTML and javascript
-#'   to set the cookie.
+#' @return A [shiny::tagList()] that provides the HTML and javascript to set the
+#'   cookie.
 #' @export
 set_cookie <- function(contents, cookie_name, expiration = 90) {
   return(
@@ -87,8 +87,8 @@ set_cookie <- function(contents, cookie_name, expiration = 90) {
 #'
 #' @inheritParams .shared-parameters
 #'
-#' @return A \code{\link[shiny]{reactive}} which returns a logical indicating
-#'   whether the user is logged in with proper API access.
+#' @return A [shiny::reactive()] which returns a logical indicating whether the
+#'   user is logged in with proper API access.
 #' @export
 check_login <- function(input, team_id) {
   return(

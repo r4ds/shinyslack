@@ -11,7 +11,7 @@ An html_dependency, which Shiny uses to add the js-cookie Javascript
 library exactly once.
 }
 \description{
-We only use the \code{set} method from this library for easier cookie
-handling, but we make it easy to add the library in case you wish to
-manipulate cookies. We also load the cookie object into the input.
+We only use the \code{set} method from this library for easier cookie handling,
+but we make it easy to add the library in case you wish to manipulate
+cookies. We also load the cookie object into the input.
 }

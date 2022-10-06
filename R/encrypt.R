@@ -2,7 +2,7 @@
 #'
 #' @param string A length-1 character to encrypt (or decrypt).
 #'
-#' @return If \code{shinyslack_key} environment variable is set, the encrypted
+#' @return If `shinyslack_key` environment variable is set, the encrypted
 #'   string. Otherwise the original string is returned.
 #' @keywords internal
 .shinyslack_encrypt <- function(string) {
@@ -25,9 +25,9 @@
 #'
 #' @inheritParams .shinyslack_encrypt
 #'
-#' @return If \code{shinyslack_key} environment variable is set, the decrypted
-#'   string (or "bad_string" if decryption fails). Otherwise the original string
-#'   is returned.
+#' @return If `shinyslack_key` environment variable is set, the decrypted string
+#'   (or "bad_string" if decryption fails). Otherwise the original string is
+#'   returned.
 #' @keywords internal
 .shinyslack_decrypt <- function(string) {
   shinyslack_key <- Sys.getenv("shinyslack_key", NA)

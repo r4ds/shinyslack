@@ -10,9 +10,9 @@
 \item{string}{A length-1 character to encrypt (or decrypt).}
 }
 \value{
-If \code{shinyslack_key} environment variable is set, the decrypted
-string (or "bad_string" if decryption fails). Otherwise the original string
-is returned.
+If \code{shinyslack_key} environment variable is set, the decrypted string
+(or "bad_string" if decryption fails). Otherwise the original string is
+returned.
 }
 \description{
 Decrypt a String If Possible

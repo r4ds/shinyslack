@@ -15,8 +15,8 @@ character value.}
 \item{expiration}{Days after which the cookie should expire.}
 }
 \value{
-A \code{\link[shiny]{tagList}} that provides the HTML and javascript
-to set the cookie.
+A \code{\link[shiny:reexports]{shiny::tagList()}} that provides the HTML and javascript to set the
+cookie.
 }
 \description{
 This function generates javascript which will set a cookie in the user's
