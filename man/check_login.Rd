@@ -13,8 +13,8 @@ check_login(input, team_id)
 authenticated.}
 }
 \value{
-A \code{\link[shiny]{reactive}} which returns a logical indicating
-whether the user is logged in with proper API access.
+A \code{\link[shiny:reactive]{shiny::reactive()}} which returns a logical indicating whether the
+user is logged in with proper API access.
 }
 \description{
 Confirm that a user is logged into Slack.

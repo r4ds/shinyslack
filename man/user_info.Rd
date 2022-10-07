@@ -8,10 +8,10 @@ user_info(components = c("user_name", "user_id"))
 }
 \arguments{
 \item{components}{A character vector of user components to include
-(\code{"user_name"} and/or \code{"user_id"}).}
+("user_name" and/or "user_id").}
 }
 \value{
-A \code{\link[shiny]{reactive}} with a named character vector.
+A \code{\link[shiny:reactive]{shiny::reactive()}} with a named character vector.
 }
 \description{
 Get information about the logged-in user from the Slack API.

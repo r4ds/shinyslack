@@ -3,9 +3,9 @@
 #' Get information about the logged-in user from the Slack API.
 #'
 #' @param components A character vector of user components to include
-#'   (\code{"user_name"} and/or \code{"user_id"}).
+#'   ("user_name" and/or "user_id").
 #'
-#' @return A \code{\link[shiny]{reactive}} with a named character vector.
+#' @return A [shiny::reactive()] with a named character vector.
 #' @export
 user_info <- function(components = c("user_name", "user_id")) {
   components <- match.arg(components, several.ok = TRUE)

@@ -22,11 +22,11 @@ the app from the Slack login.}
 
 \item{expiration}{Days after which the user's login cookie should expire.}
 
-\item{...}{Additional parameters passed on to \code{\link[shiny]{shinyApp}}.}
+\item{...}{Additional parameters passed on to \code{\link[shiny:shinyApp]{shiny::shinyApp()}}.}
 }
 \value{
-An object that represents the app. See \code{\link[shiny]{shinyApp}}
-for details.
+An object that represents the app. See \code{\link[shiny:shinyApp]{shiny::shinyApp()}} for
+details.
 }
 \description{
 Launch a Shiny App with a Slack Login

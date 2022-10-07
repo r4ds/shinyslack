@@ -8,7 +8,9 @@ pkgload::load_all(
 
 team_id <- "T6UC1DKJQ"
 
-ui <- shiny::fluidPage(shiny::textOutput("user_name"))
+ui <- scenes::add_cookie_javascript(
+  shiny::fluidPage(shiny::textOutput("user_name"))
+)
 
 server <- function(input, output, session) {
   is_logged_in <- check_login(

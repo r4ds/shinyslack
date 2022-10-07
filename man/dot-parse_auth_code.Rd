@@ -16,7 +16,7 @@ authenticated.}
 \item{expiration}{Days after which the cookie should expire.}
 }
 \value{
-A function that takes a request and returns a \code{\link[shiny:reexports]{shiny::tagList()}}that
+A function that takes a request and returns a \code{\link[shiny:reexports]{shiny::tagList()}} that
 sets the cookie then reloads the site.
 }
 \description{

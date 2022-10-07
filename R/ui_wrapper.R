@@ -2,21 +2,47 @@
 #'
 #' @inheritParams slack_shiny_ui
 #' @inheritParams shiny::shinyApp
-#' @param ... Additional parameters passed on to \code{\link[shiny]{shinyApp}}.
+#' @param ... Additional parameters passed on to [shiny::shinyApp()].
 #' @importFrom rlang %||%
 #'
-#' @return An object that represents the app. See \code{\link[shiny]{shinyApp}}
-#'   for details.
+#' @return An object that represents the app. See [shiny::shinyApp()] for
+#'   details.
 #' @export
 shinyslack_app <- function(ui,
                            server,
                            team_id,
-                           site_url = NULL,
+                           site_url = NULL, #25
                            expiration = 90,
                            ...) {
   dots <- rlang::list2(...)
-  options <- dots$options %||% list()
+  parsed <- .parse_app_args(dots$options, site_url) #25
   dots$options <- NULL
+
+  return(
+    rlang::exec(
+      shiny::shinyApp,
+      ui = slack_shiny_ui(
+        ui = ui,
+        team_id = team_id,
+        site_url = parsed$site_url, #25
+        expiration = expiration
+      ),
+      server = server,
+      options = parsed$options,
+      !!!dots
+    )
+  )
+}
+
+#' Figure Out Args for shinyslack_app
+#'
+#' @inheritParams shinyslack_app
+#' @inheritParams shiny::shinyApp
+#'
+#' @return A list with elements `options` and `site_url`.
+#' @keywords internal
+.parse_app_args <- function(options, site_url) {
+  options <- options %||% list()
   if (interactive()) {
     options$port <- options$port %||% 4242L
     site_url <- paste0("http://127.0.0.1:", options$port)
@@ -29,19 +55,10 @@ shinyslack_app <- function(ui,
       class = "missing_site_url"
     )
   }
-
   return(
-    rlang::exec(
-      shiny::shinyApp,
-      ui = slack_shiny_ui(
-        ui = ui,
-        team_id = team_id,
-        site_url = site_url,
-        expiration = expiration
-      ),
-      server = server,
+    list(
       options = options,
-      !!!dots
+      site_url = site_url
     )
   )
 }
@@ -62,12 +79,9 @@ shinyslack_app <- function(ui,
 #'   without).
 #' @export
 slack_shiny_ui <- function(ui, team_id, site_url, expiration = 90) {
-  # Case 1: They already have a cookie token. In this case we return the ui.
-  # Note: This means .validate_cookie_token has already parsed their token and
-  # set it as the SLACK_API_TOKEN environment variable used by slackcalls, so no
-  # further validation is needed by apps that wish to use Slack.
+  # Case 1: They already have a cookie token.
   has_cookie_token <- scenes::set_scene(
-    ui = .add_cookies(ui), # Should this happen in {scenes}?
+    ui = ui,
     scenes::req_has_cookie(
       cookie_name = .slack_token_cookie_name(team_id),
       validation_fn = .validate_cookie_token,
@@ -75,16 +89,13 @@ slack_shiny_ui <- function(ui, team_id, site_url, expiration = 90) {
     )
   )
 
-  # TODO: In theory we should probably allow tokens via URL? I fake had it in
-  # here before but I don't validate it and don't have a specific usecase yet.
+  # Case1b: No cookies. #5
 
   # Case 2: They are returning from the oauth endpoint, which has granted them
-  # authorization. The url will now have a `code` parameter. If someone puts in
-  # a fake one they'll still get this parser UI, but it will fail and tell them
-  # why.
+  # an authorization code.
   has_oauth_code <- scenes::set_scene(
     ui = .parse_auth_code(
-      site_url = site_url,
+      site_url = site_url, #25
       team_id = team_id,
       expiration = expiration
     ),
@@ -95,7 +106,7 @@ slack_shiny_ui <- function(ui, team_id, site_url, expiration = 90) {
   # token.
   needs_login <- scenes::set_scene(
     ui = .do_login(
-      site_url = site_url,
+      site_url = site_url, #25
       team_id = team_id
     )
   )
