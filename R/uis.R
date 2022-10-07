@@ -1,7 +1,7 @@
 #' Convert a Slack Authorization Code to a Token
 #'
 #' @inheritParams .shared-parameters
-#' @inheritParams set_cookie
+#' @inheritParams scenes::set_cookie
 #'
 #' @return A function that takes a request and returns a [shiny::tagList()] that
 #'   sets the cookie then reloads the site.
@@ -28,7 +28,7 @@
       # Have the browser set the cookie then reload.
       return(
         shiny::tagList(
-          set_cookie( #5
+          scenes::set_cookie( #5
             contents = token,
             cookie_name = .slack_token_cookie_name(team_id),
             expiration = expiration
@@ -73,29 +73,6 @@
             shiny::HTML(.slack_logo_svg),
             "Sign in with Slack"
           ) #5
-        )
-      )
-    }
-  )
-}
-
-.add_cookie_javascript <- function(ui) {
-  force(ui)
-  return(
-    function(request) {
-      # ui can be a tagList, a 0-argument function, or a 1-argument function. Deal
-      # with those.
-      if (is.function(ui)) {
-        if (length(formals(ui))) {
-          ui <- ui(request)
-        } else {
-          ui <- ui()
-        }
-      }
-      return(
-        shiny::tagList(
-          include_cookies(),
-          ui
         )
       )
     }

@@ -25,14 +25,13 @@ RoxygenNote: 7.2.1
 URL: https://github.com/r4ds/shinyslack
 BugReports: https://github.com/r4ds/shinyslack/issues
 Imports: 
-    httpuv,
     httr,
+    rlang,
     scenes,
     shiny,
     slackcalls,
     slackteams,
-    sodium,
-    stats
+    sodium
 Remotes: 
     r4ds/scenes,
     yonicd/slackcalls,

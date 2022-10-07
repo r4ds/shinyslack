@@ -8,58 +8,6 @@
   )
 }
 
-#' Add the js-cookie Javascript Library
-#'
-#' We only use the `set` method from this library for easier cookie handling,
-#' but we make it easy to add the library in case you wish to manipulate
-#' cookies. We also load the cookie object into the input.
-#'
-#' @return An html_dependency, which Shiny uses to add the js-cookie Javascript
-#'   library exactly once.
-#' @export
-include_cookies <- function() {
-  return(
-    htmltools::htmlDependency(
-      name = "shinyslack",
-      version = "1.0.0",
-      src = "www",
-      package = "shinyslack",
-      script = c("js.cookie.js", "cookie_input.js")
-    )
-  )
-}
-
-#' Shiny Tags to Add Cookies
-#'
-#' This function generates javascript which will set a cookie in the user's
-#' browser.
-#'
-#' @param contents The contents of the cookie. Right now this should be a single
-#'   character value.
-#' @param cookie_name A name for the cookie. Must be a valid cookie name.
-#' @param expiration Days after which the cookie should expire.
-#'
-#' @return A [shiny::tagList()] that provides the HTML and javascript to set the
-#'   cookie.
-#' @export
-set_cookie <- function(contents, cookie_name, expiration = 90) {
-  return(
-    shiny::tagList(
-      include_cookies(),
-      shiny::tags$script(
-        shiny::HTML(
-          sprintf(
-            "Cookies.set('%s', '%s', { expires: %i });",
-            cookie_name,
-            contents,
-            expiration
-          )
-        )
-      )
-    )
-  )
-}
-
 #' Make Sure a Cookie Token Works
 #'
 #' @inheritParams .shared-parameters
