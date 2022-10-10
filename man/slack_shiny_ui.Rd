@@ -16,7 +16,7 @@ authenticated.}
 \item{site_url}{The URL of the Shiny app. This is used to return the user to
 the app from the Slack login.}
 
-\item{expiration}{Days after which the user's login cookie should expire.}
+\item{expiration}{Days after which the cookie should expire.}
 }
 \value{
 A function defining the UI of a Shiny app (either with login or
@@ -25,5 +25,5 @@ without).
 \description{
 This is a function factory that wraps a Shiny ui. If the user does not have a
 cookie for that site, they are prompted to login. Once they have a cookie,
-the UI displays as normal.
+the UI displays as normal. #5
 }

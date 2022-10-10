@@ -16,8 +16,8 @@ authenticated.}
 \item{expiration}{Days after which the cookie should expire.}
 }
 \value{
-A function that takes a request and returns a \code{\link[shiny:reexports]{shiny::tagList()}} that
-sets the cookie then reloads the site.
+A ui function that takes a request and returns a \code{\link[shiny:reexports]{shiny::tagList()}}
+that sets the cookie then reloads the site.
 }
 \description{
 Convert a Slack Authorization Code to a Token

@@ -1,9 +1,9 @@
 #' Launch a Shiny App with a Slack Login
 #'
+#' Launch a [shiny::shinyApp()] with an integrated Slack login.
 #' @inheritParams slack_shiny_ui
 #' @inheritParams shiny::shinyApp
 #' @param ... Additional parameters passed on to [shiny::shinyApp()].
-#' @importFrom rlang %||%
 #'
 #' @return An object that represents the app. See [shiny::shinyApp()] for
 #'   details.
@@ -38,6 +38,7 @@ shinyslack_app <- function(ui,
 #'
 #' @inheritParams shinyslack_app
 #' @inheritParams shiny::shinyApp
+#' @importFrom rlang %||%
 #'
 #' @return A list with elements `options` and `site_url`.
 #' @keywords internal
@@ -66,14 +67,12 @@ shinyslack_app <- function(ui,
 
 #' Require Slack login to a Shiny app
 #'
-#'
 #' This is a function factory that wraps a Shiny ui. If the user does not have a
 #' cookie for that site, they are prompted to login. Once they have a cookie,
-#' the UI displays as normal.
+#' the UI displays as normal. #5
 #'
 #' @inheritParams .shared-parameters
 #' @inheritParams .parse_auth_code
-#' @param expiration Days after which the user's login cookie should expire.
 #'
 #' @return A function defining the UI of a Shiny app (either with login or
 #'   without).

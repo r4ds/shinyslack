@@ -20,7 +20,7 @@ authenticated.}
 \item{site_url}{The URL of the Shiny app. This is used to return the user to
 the app from the Slack login.}
 
-\item{expiration}{Days after which the user's login cookie should expire.}
+\item{expiration}{Days after which the cookie should expire.}
 
 \item{...}{Additional parameters passed on to \code{\link[shiny:shinyApp]{shiny::shinyApp()}}.}
 }
@@ -29,5 +29,5 @@ An object that represents the app. See \code{\link[shiny:shinyApp]{shiny::shinyA
 details.
 }
 \description{
-Launch a Shiny App with a Slack Login
+Launch a \code{\link[shiny:shinyApp]{shiny::shinyApp()}} with an integrated Slack login.
 }

@@ -14,8 +14,8 @@ the app from the Slack login.}
 authenticated.}
 }
 \value{
-A function that takes a request and returns a \code{\link[shiny:reexports]{shiny::tagList()}}that
-sends the user to the proper Slack api URL in order to authenticate.
+A ui function that takes a request and returns a \code{\link[shiny:reexports]{shiny::tagList()}}
+that sends the user to the proper Slack api URL in order to authenticate.
 }
 \description{
 Perform the Login Via Slack

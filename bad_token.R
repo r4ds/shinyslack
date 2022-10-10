@@ -8,9 +8,9 @@ devtools::load_all(".")
 
 ui <- shiny::fluidPage(
   # Add the code to add the cookie.
-  scenes::set_cookie(
-    contents = "bad_token",
-    cookie_name = .slack_token_cookie_name(team_id)
+  cookies::set_cookie_on_load(
+    name = .slack_token_cookie_name(team_id),
+    contents = "bad_token"
   )
 )
 
