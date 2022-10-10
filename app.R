@@ -8,7 +8,7 @@ pkgload::load_all(
 
 team_id <- "T6UC1DKJQ"
 
-ui <- scenes::add_cookie_javascript(
+ui <- cookies::add_cookie_handlers(
   shiny::fluidPage(shiny::textOutput("user_name"))
 )
 

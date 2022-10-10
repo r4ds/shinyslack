@@ -1,10 +1,10 @@
 #' Convert a Slack Authorization Code to a Token
 #'
 #' @inheritParams .shared-parameters
-#' @inheritParams scenes::set_cookie
+#' @inheritParams cookies::set_cookie_on_load
 #'
-#' @return A function that takes a request and returns a [shiny::tagList()] that
-#'   sets the cookie then reloads the site.
+#' @return A ui function that takes a request and returns a [shiny::tagList()]
+#'   that sets the cookie then reloads the site.
 #' @keywords internal
 .parse_auth_code <- function(site_url, team_id, expiration) {
   force(site_url) #25
@@ -28,10 +28,11 @@
       # Have the browser set the cookie then reload.
       return(
         shiny::tagList(
-          scenes::set_cookie( #5
+          cookies::set_cookie_on_load( #5
+            name = .slack_token_cookie_name(team_id),
             contents = token,
-            cookie_name = .slack_token_cookie_name(team_id),
-            expiration = expiration
+            expiration = expiration,
+            secure_only = TRUE
           ),
           # Reload the page to re-process the request.
           shiny::tags$script(
@@ -49,8 +50,8 @@
 #'
 #' @inheritParams .shared-parameters
 #'
-#' @return A function that takes a request and returns a [shiny::tagList()]that
-#'   sends the user to the proper Slack api URL in order to authenticate.
+#' @return A ui function that takes a request and returns a [shiny::tagList()]
+#'   that sends the user to the proper Slack api URL in order to authenticate.
 #' @keywords internal
 .do_login <- function(site_url, team_id) {
   force(site_url) #25
