@@ -1,6 +1,5 @@
 #' Parameters Used in Various Functions
 #'
-#' @param input The shiny input object.
 #' @param request The shiny request object to parse.
 #' @param site_url The URL of the Shiny app. This is used to return the user to
 #'   the app from the Slack login.

@@ -25,21 +25,15 @@
       # Encrypt the token.
       token <- .shinyslack_encrypt(token)
 
-      # Have the browser set the cookie then reload.
+      # Have the browser set the cookie then load the updated url.
       return(
-        shiny::tagList(
-          cookies::set_cookie_on_load( #5
-            name = .slack_token_cookie_name(team_id),
-            contents = token,
-            expiration = expiration,
-            secure_only = TRUE
-          ),
-          # Reload the page to re-process the request.
-          shiny::tags$script(
-            shiny::HTML(
-              sprintf("location.replace('%s');", site_url)
-            )
-          )
+        cookies::set_cookie_response(
+          cookie_name = .slack_token_cookie_name(team_id),
+          cookie_value = token,
+          expiration = expiration,
+          secure_only = TRUE,
+          http_only = TRUE,
+          redirect = site_url
         )
       )
     }
