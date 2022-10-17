@@ -13,10 +13,7 @@ ui <- cookies::add_cookie_handlers(
 )
 
 server <- function(input, output, session) {
-  is_logged_in <- check_login(
-    input = input,
-    team_id = team_id
-  )
+  is_logged_in <- check_login(team_id = team_id)
 
   username <- user_info(
     components = "user_name"

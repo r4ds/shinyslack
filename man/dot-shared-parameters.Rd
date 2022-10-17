@@ -4,8 +4,6 @@
 \alias{.shared-parameters}
 \title{Parameters Used in Various Functions}
 \arguments{
-\item{input}{The shiny input object.}
-
 \item{request}{The shiny request object to parse.}
 
 \item{site_url}{The URL of the Shiny app. This is used to return the user to
