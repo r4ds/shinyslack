@@ -7,6 +7,10 @@ pkgload::load_all(
 )
 
 team_id <- "T6UC1DKJQ"
+site_url <- Sys.getenv(
+  "shinyslack_site_url",
+  unset = "https://r4dscommunity.shinyapps.io/shinyslack/"
+)
 
 ui <- cookies::add_cookie_handlers(
   shiny::fluidPage(shiny::textOutput("user_name"))
@@ -29,5 +33,5 @@ shinyslack_app(
   ui = ui,
   server = server,
   team_id = team_id,
-  site_url = "https://r4dscommunity.shinyapps.io/shinyslack/"
+  site_url = site_url
 )
