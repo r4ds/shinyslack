@@ -9,11 +9,24 @@
   shinyslack_key <- Sys.getenv("shinyslack_key", NA)
 
   if (!is.na(shinyslack_key)) {
+    cli::cli_inform(
+      c(
+        "shinyslack_key found.",
+        v = "Encrypting string."
+      )
+    )
     string <- sodium::bin2hex(
       sodium::data_encrypt(
         msg = charToRaw(string),
         key = charToRaw(shinyslack_key),
         nonce = .shinyslack_nonce
+      )
+    )
+  } else {
+    cli::cli_warn(
+      c(
+        "shinyslack_key not found.",
+        x = "String not encoded."
       )
     )
   }
