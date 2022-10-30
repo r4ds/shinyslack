@@ -9,7 +9,7 @@ pkgload::load_all(
 team_id <- "T6UC1DKJQ"
 site_url <- Sys.getenv(
   "shinyslack_site_url",
-  unset = "https://r4dscommunity.shinyapps.io/shinyslack/"
+  unset = "https://r4dscommunity.shinyapps.io/shinyslacktest/"
 )
 
 ui <- cookies::add_cookie_handlers(
