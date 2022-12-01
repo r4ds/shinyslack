@@ -34,19 +34,14 @@
 #' Confirm that a user is logged into Slack.
 #'
 #' @inheritParams .shared-parameters
-#' @param session The shiny session object. In most situations you should use
-#'   the default.
 #'
 #' @return A [shiny::reactive()] which returns a logical indicating whether the
 #'   user is logged in with proper API access.
 #' @export
-check_login <- function(team_id, session = shiny::getDefaultReactiveDomain()) {
+check_login <- function(team_id) {
   return(
     shiny::reactive({
-      slack_cookie <- cookies::extract_cookie(
-        session$request,
-        .slack_token_cookie_name(team_id)
-      )
+      slack_cookie <- cookies::get_cookie(.slack_token_cookie_name(team_id))
 
       return(
         !is.null(slack_cookie) && .validate_cookie_token(
