@@ -27,7 +27,6 @@ Imports:
     slackteams,
     sodium
 Remotes: 
-    r4ds/cookies,
     r4ds/scenes,
     yonicd/slackcalls,
     yonicd/slackteams
