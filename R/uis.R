@@ -99,8 +99,13 @@
 #' @return A character with the url.
 #' @keywords internal
 .extract_server_url <- function(request) {
-  if ("x-redx-frontend-name" %in% tolower(names(request))) {
-    this_url <- request$`X-REDX-FRONTEND-NAME` %||%
+  if (any(
+    c("x-redx-frontend-name", "http_x_redx_frontend_name")
+    %in% tolower(names(request))
+  )) {
+    this_url <- request$`HTTP_X_REDX_FRONTEND_NAME` %||%
+      request$`http_x_redx_frontend_name` %||%
+      request$`X-REDX-FRONTEND-NAME` %||%
       request$`x-redx-frontend-name`
   } else {
     this_url <- request$SERVER_NAME %||% request$server_name
