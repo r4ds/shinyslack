@@ -103,32 +103,38 @@
     c("x-redx-frontend-name", "http_x_redx_frontend_name")
     %in% tolower(names(request))
   )) {
-    this_url <- request$`HTTP_X_REDX_FRONTEND_NAME` %||%
-      request$`http_x_redx_frontend_name` %||%
+    url <- request$HTTP_X_REDX_FRONTEND_NAME %||%
+      request$http_x_redx_frontend_name %||%
       request$`X-REDX-FRONTEND-NAME` %||%
       request$`x-redx-frontend-name`
-  } else {
-    this_url <- request$SERVER_NAME %||% request$server_name
 
-    if (is.null(this_url)) {
+    scheme <- request$HTTP_X_FORWARDED_PROTO %||%
+      request$http_x_forwarded_proto %||%
+      request$`X-FORWARDED-PROTO` %||%
+      request$`x-forwarded-proto`
+  } else {
+    url <- request$SERVER_NAME %||% request$server_name
+
+    if (is.null(url)) {
       cli::cli_abort(
         message = c(x = "Could not determine url.")
       )
     }
 
-    this_port <- request$SERVER_PORT %||% request$server_port
+    port <- request$SERVER_PORT %||% request$server_port
 
-    if (!is.null(this_port)) {
-      this_url <- paste(this_url, this_port, sep = ":")
+    if (!is.null(port)) {
+      url <- paste(url, port, sep = ":")
     }
+
+    scheme <- request$rook.url_scheme
   }
 
-  # We also need the http/https part.
-  this_url <- paste0(
-    request$rook.url_scheme,
-    "://",
-    this_url
+  return(
+    paste0(
+      scheme,
+      "://",
+      url
+    )
   )
-
-  return(this_url)
 }
