@@ -14,8 +14,7 @@ shinyslack_app <- function(ui,
                            expiration = 90,
                            ...) {
   dots <- rlang::list2(...)
-  parsed <- .parse_app_args(dots$options)
-  dots$options <- NULL
+  dots$options <- .parse_app_args(dots$options)
 
   return(
     rlang::exec(
@@ -26,7 +25,6 @@ shinyslack_app <- function(ui,
         expiration = expiration
       ),
       server = server,
-      options = parsed$options,
       !!!dots
     )
   )

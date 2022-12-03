@@ -99,16 +99,31 @@
 #' @return A character with the url.
 #' @keywords internal
 .extract_server_url <- function(request) {
-  this_url <- request$`X-REDX-FRONTEND-NAME` %||%
-    request$`x-redx-frontend-name` %||%
-    request$SERVER_NAME %||%
-    request$server_name
+  if ("x-redx-frontend-name" %in% tolower(names(request))) {
+    this_url <- request$`X-REDX-FRONTEND-NAME` %||%
+      request$`x-redx-frontend-name`
+  } else {
+    this_url <- request$SERVER_NAME %||% request$server_name
 
-  if (is.null(this_url)) {
-    cli::cli_abort(
-      message = c(x = "Could not determine url.")
-    )
+    if (is.null(this_url)) {
+      cli::cli_abort(
+        message = c(x = "Could not determine url.")
+      )
+    }
+
+    this_port <- request$SERVER_PORT %||% request$server_port
+
+    if (!is.null(this_port)) {
+      this_url <- paste(this_url, this_port, sep = ":")
+    }
   }
+
+  # We also need the http/https part.
+  this_url <- paste0(
+    request$rook.url_scheme,
+    "://",
+    this_url
+  )
 
   return(this_url)
 }
