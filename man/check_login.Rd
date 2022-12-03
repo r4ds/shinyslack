@@ -4,14 +4,11 @@
 \alias{check_login}
 \title{Check Slack Login}
 \usage{
-check_login(team_id, session = shiny::getDefaultReactiveDomain())
+check_login(team_id)
 }
 \arguments{
 \item{team_id}{The Slack team ID through which the user is being
 authenticated.}
-
-\item{session}{The shiny session object. In most situations you should use
-the default.}
 }
 \value{
 A \code{\link[shiny:reactive]{shiny::reactive()}} which returns a logical indicating whether the

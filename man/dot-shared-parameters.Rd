@@ -6,9 +6,6 @@
 \arguments{
 \item{request}{The shiny request object to parse.}
 
-\item{site_url}{The URL of the Shiny app. This is used to return the user to
-the app from the Slack login.}
-
 \item{team_id}{The Slack team ID through which the user is being
 authenticated.}
 

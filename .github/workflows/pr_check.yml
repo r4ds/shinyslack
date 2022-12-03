@@ -24,7 +24,6 @@ jobs:
         run: |
           echo "shinyslack_key=${{secrets.SHINYSLACK_KEY}}" >> .Renviron
           echo "SLACK_SKIPLOAD=TRUE" >> .Renviron
-          echo "shinyslack_site_url=https://r4dscommunity.shinyapps.io/shinyslacktest/" >> .Renviron
         shell: bash {0}
 
       - name: Push to shinyapps

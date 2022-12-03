@@ -11,11 +11,10 @@
 shinyslack_app <- function(ui,
                            server,
                            team_id,
-                           site_url = NULL, #25
                            expiration = 90,
                            ...) {
   dots <- rlang::list2(...)
-  parsed <- .parse_app_args(dots$options, site_url) #25
+  parsed <- .parse_app_args(dots$options)
   dots$options <- NULL
 
   return(
@@ -24,7 +23,6 @@ shinyslack_app <- function(ui,
       ui = slack_shiny_ui(
         ui = ui,
         team_id = team_id,
-        site_url = parsed$site_url, #25
         expiration = expiration
       ),
       server = server,
@@ -40,28 +38,16 @@ shinyslack_app <- function(ui,
 #' @inheritParams shiny::shinyApp
 #' @importFrom rlang %||%
 #'
-#' @return A list with elements `options` and `site_url`.
+#' @return The parsed `options`.
 #' @keywords internal
-.parse_app_args <- function(options, site_url) {
+.parse_app_args <- function(options) {
   options <- options %||% list()
   if (interactive()) {
     options$port <- options$port %||% 4242L
-    site_url <- paste0("http://127.0.0.1:", options$port)
     options$launch.browser <- TRUE
   }
 
-  if (is.null(site_url)) {
-    rlang::abort(
-      "You must supply a site_url to shinyslack_app in non-interactive mode.",
-      class = "missing_site_url"
-    )
-  }
-  return(
-    list(
-      options = options,
-      site_url = site_url
-    )
-  )
+  return(options)
 }
 
 
@@ -77,7 +63,7 @@ shinyslack_app <- function(ui,
 #' @return A function defining the UI of a Shiny app (either with login or
 #'   without).
 #' @export
-slack_shiny_ui <- function(ui, team_id, site_url, expiration = 90) {
+slack_shiny_ui <- function(ui, team_id, expiration = 90) {
   # Case 1: They already have a cookie token.
   has_cookie_token <- scenes::set_scene(
     ui = ui,
@@ -94,7 +80,6 @@ slack_shiny_ui <- function(ui, team_id, site_url, expiration = 90) {
   # an authorization code.
   has_oauth_code <- scenes::set_scene(
     ui = .parse_auth_code(
-      site_url = site_url, #25
       team_id = team_id,
       expiration = expiration
     ),
@@ -105,7 +90,6 @@ slack_shiny_ui <- function(ui, team_id, site_url, expiration = 90) {
   # token.
   needs_login <- scenes::set_scene(
     ui = .do_login(
-      site_url = site_url, #25
       team_id = team_id
     )
   )

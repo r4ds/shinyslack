@@ -42,13 +42,9 @@ server <- function(input, output, session) {
 }
 shiny_slack_app(
   ui, server, 
-  team_id = "T6UC1DKJQ", 
-  site_url = "https://myaccount.shinyapps.io/myapp/"
+  team_id = "T6UC1DKJQ"
 )
 ```
-
-The `site_url` is only necessary if you deploy your app.
-The login workflow needs this url to know where to send the user back to after logging in.
 
 ## Finding your team_id
 
