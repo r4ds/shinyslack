@@ -99,7 +99,10 @@
 #' @return A character with the url.
 #' @keywords internal
 .extract_server_url <- function(request) {
-  this_url <- request$`X-FORWARDED-HOST` %||% request$SERVER_NAME
+  this_url <- request$`X-REDX-FRONTEND-NAME` %||%
+    request$`x-redx-frontend-name` %||%
+    request$SERVER_NAME %||%
+    request$server_name
 
   if (is.null(this_url)) {
     cli::cli_abort(
