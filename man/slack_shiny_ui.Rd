@@ -4,7 +4,7 @@
 \alias{slack_shiny_ui}
 \title{Require Slack login to a Shiny app}
 \usage{
-slack_shiny_ui(ui, team_id, site_url, expiration = 90)
+slack_shiny_ui(ui, team_id, expiration = 90)
 }
 \arguments{
 \item{ui}{A 0- or 1-argument function defining the UI of a Shiny app, or a
@@ -13,10 +13,8 @@ slack_shiny_ui(ui, team_id, site_url, expiration = 90)
 \item{team_id}{The Slack team ID through which the user is being
 authenticated.}
 
-\item{site_url}{The URL of the Shiny app. This is used to return the user to
-the app from the Slack login.}
-
-\item{expiration}{Days after which the cookie should expire.}
+\item{expiration}{Days after which the cookie should expire. To remove an
+HttpOnly cookie, send a negative value for this attribute.}
 }
 \value{
 A function defining the UI of a Shiny app (either with login or

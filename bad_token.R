@@ -1,16 +1,15 @@
 # Launch the ShinyApp (Do not remove this comment)
 # This sets a bad token intentionally. Only used locally for testing.
 
-site_url <- "http://127.0.0.1:4242/"
 team_id <- "T6UC1DKJQ"
 
 devtools::load_all(".")
 
 ui <- shiny::fluidPage(
   # Add the code to add the cookie.
-  cookies::set_cookie_on_load(
-    name = .slack_token_cookie_name(team_id),
-    contents = "bad_token"
+  cookies::set_cookie_response(
+    cookie_name = .slack_token_cookie_name(team_id),
+    cookie_value = "bad_token"
   )
 )
 

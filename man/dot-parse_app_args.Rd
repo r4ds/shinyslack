@@ -4,7 +4,7 @@
 \alias{.parse_app_args}
 \title{Figure Out Args for shinyslack_app}
 \usage{
-.parse_app_args(options, site_url)
+.parse_app_args(options)
 }
 \arguments{
 \item{options}{Named options that should be passed to the \code{runApp} call
@@ -12,12 +12,9 @@
 "display.mode" and "test.mode"). You can also specify \code{width} and
 \code{height} parameters which provide a hint to the embedding environment
 about the ideal height/width for the app.}
-
-\item{site_url}{The URL of the Shiny app. This is used to return the user to
-the app from the Slack login.}
 }
 \value{
-A list with elements \code{options} and \code{site_url}.
+The parsed \code{options}.
 }
 \description{
 Figure Out Args for shinyslack_app

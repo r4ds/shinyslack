@@ -8,3 +8,4 @@ rsconnect
 .Renviron
 inst/doc
 .Renvironfake
+apptest.R

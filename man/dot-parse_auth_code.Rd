@@ -4,16 +4,14 @@
 \alias{.parse_auth_code}
 \title{Convert a Slack Authorization Code to a Token}
 \usage{
-.parse_auth_code(site_url, team_id, expiration)
+.parse_auth_code(team_id, expiration)
 }
 \arguments{
-\item{site_url}{The URL of the Shiny app. This is used to return the user to
-the app from the Slack login.}
-
 \item{team_id}{The Slack team ID through which the user is being
 authenticated.}
 
-\item{expiration}{Days after which the cookie should expire.}
+\item{expiration}{Days after which the cookie should expire. To remove an
+HttpOnly cookie, send a negative value for this attribute.}
 }
 \value{
 A ui function that takes a request and returns a \code{\link[shiny:reexports]{shiny::tagList()}}
