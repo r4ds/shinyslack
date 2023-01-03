@@ -57,8 +57,14 @@
       )
       return(
         shiny::tagList( #15
+          shiny::p("Login via Slack to access this site."),
           shiny::p(
-            "Login via Slack to access this site."
+            paste(
+              "Note: If you are logged into multiple slack teams, you may be",
+              "initially presented with the wrong team on the next page.",
+              "Select the proper team in the drop-down at the top-right of",
+              "that page if a drop-down is present."
+            )
           ),
           shiny::a(
             href = auth_url,
