@@ -8,19 +8,15 @@ pkgload::load_all(
 
 team_id <- "T6UC1DKJQ"
 
-ui <- cookies::add_cookie_handlers(
-  shiny::fluidPage(shiny::textOutput("user_name"))
-)
+ui <- shiny::fluidPage(shiny::textOutput("user_name"))
 
 server <- function(input, output, session) {
-  is_logged_in <- check_login(team_id = team_id)
-
   username <- user_info(
     components = "user_name"
   )
 
   output$user_name <- shiny::renderText({
-    shiny::req(is_logged_in())
+    shiny::req(check_login(team_id)())
     username()
   })
 }
