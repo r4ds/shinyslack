@@ -20,18 +20,29 @@ user_info <- function(components = c("user_id",
   components <- match.arg(components, several.ok = TRUE)
   return(
     shiny::reactive({
-      # We need their ID in order to get the rest.
-      user_id <- slackcalls::post_slack("auth.test")$user_id
-
-      slack_info <- slackcalls::post_slack("users.info", user = user_id)$user
-
-      c(
-        user_id = slack_info$id,
-        real_name = slack_info$profile$real_name,
-        display_name = slack_info$profile$display_name,
-        pronouns = slack_info$profile$pronouns,
-        user_name = slack_info$name
-      )[components]
+      # We need basics from auth.test to get the rest.
+      basics <- slackcalls::post_slack("auth.test")
+      if (all(components %in% c("user_id", "user_name"))) {
+        return(
+          c(
+            user_id = basics$user_id,
+            user_name = basics$user
+          )[components]
+        )
+      } else {
+        slack_info <- slackcalls::post_slack(
+          "users.info", user = basics$user_id
+        )$user
+        return(
+          c(
+            user_id = slack_info$id,
+            real_name = slack_info$profile$real_name,
+            display_name = slack_info$profile$display_name,
+            pronouns = slack_info$profile$pronouns,
+            user_name = slack_info$name
+          )[components]
+        )
+      }
     })
   )
 }
