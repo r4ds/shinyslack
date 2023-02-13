@@ -11,9 +11,7 @@ team_id <- "T6UC1DKJQ"
 ui <- shiny::fluidPage(shiny::textOutput("user_name"))
 
 server <- function(input, output, session) {
-  username <- user_info(
-    components = "user_name"
-  )
+  username <- user_info(components = "display_name")
 
   output$user_name <- shiny::renderText({
     shiny::req(check_login(team_id)())

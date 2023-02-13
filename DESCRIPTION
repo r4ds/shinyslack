@@ -1,6 +1,6 @@
 Package: shinyslack
 Title: Integrate Slack and Shiny
-Version: 0.0.0.9007
+Version: 0.0.0.9008
 Authors@R: c(
     person(given = "Jon",
            family = "Harmon",

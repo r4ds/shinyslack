@@ -4,11 +4,20 @@
 \alias{user_info}
 \title{Fetch Slack User Info}
 \usage{
-user_info(components = c("user_name", "user_id"))
+user_info(
+  components = c("user_id", "real_name", "display_name", "pronouns", "user_name")
+)
 }
 \arguments{
-\item{components}{A character vector of user components to include
-("user_name" and/or "user_id").}
+\item{components}{A character vector of user components to include. Current
+options are:
+\itemize{
+\item user_id: The ID used to uniquely identify this user on this Slack team.
+\item real_name: The full name of this user as entered in their profile.
+\item display_name: The name that the user has chosen to display to other users in Slack.
+\item pronouns: The pronouns set by this user, if any.
+\item user_name: You probably do not want this. It is a legacy piece of information.
+}}
 }
 \value{
 A \code{\link[shiny:reactive]{shiny::reactive()}} with a named character vector.
