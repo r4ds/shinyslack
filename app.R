@@ -6,7 +6,7 @@ pkgload::load_all(
   quiet = TRUE
 )
 
-team_id <- "T6UC1DKJQ"
+team_id_errorproof <- "T6UC1DKJQ"
 Sys.unsetenv("SLACK_API_TOKEN")
 
 ui <- shiny::fluidPage(shiny::textOutput("user_name"))
@@ -21,5 +21,5 @@ server <- function(input, output, session) {
 shinyslack_app(
   ui = ui,
   server = server,
-  team_id = team_id
+  team_id = team_id_errorproof
 )

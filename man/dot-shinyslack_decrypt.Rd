@@ -11,8 +11,9 @@
 set, the string is returned unencrypted.}
 }
 \value{
-If \code{shinyslack_key} non-empty, the decrypted string (or "bad_string"
-if decryption fails). Otherwise the original string is returned.
+If \code{shinyslack_key} is non-empty, the decrypted string (or
+"bad_string" if decryption fails). Otherwise the original string is
+returned.
 }
 \description{
 Decrypt a String If Possible

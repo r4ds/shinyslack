@@ -21,7 +21,7 @@ shinyslack_app <- function(ui,
     rlang::exec(
       shiny::shinyApp,
       ui = slack_shiny_ui(ui, team_id, expiration, shinyslack_key),
-      server = server,
+      server = .shinyslack_server(server, team_id),
       !!!dots
     )
   )

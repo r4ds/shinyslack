@@ -18,12 +18,11 @@ user_info <- function(components = c("user_id",
                                      "display_name",
                                      "pronouns",
                                      "user_name"),
-                      ...,
                       session = shiny::getDefaultReactiveDomain(),
                       slack_api_key = session$userData$shinyslack_api_key,
+                      team_id = session$userData$shinyslack_team_id,
                       shinyslack_key = Sys.getenv("SHINYSLACK_KEY")) {
   components <- match.arg(components, several.ok = TRUE)
-  rlang::check_dots_empty()
   return(
     shiny::reactive({
       slack_api_key <- .update_shinyslack_api_key(
