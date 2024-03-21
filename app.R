@@ -7,6 +7,7 @@ pkgload::load_all(
 )
 
 team_id <- "T6UC1DKJQ"
+Sys.unsetenv("SLACK_API_TOKEN")
 
 ui <- shiny::fluidPage(shiny::textOutput("user_name"))
 

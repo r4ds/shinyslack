@@ -7,8 +7,6 @@
 .shinyslack_decrypt(string, shinyslack_key = Sys.getenv("SHINYSLACK_KEY"))
 }
 \arguments{
-\item{string}{A length-1 character to encrypt (or decrypt).}
-
 \item{shinyslack_key}{(optional) A key to use to encrypt the string. If not
 set, the string is returned unencrypted.}
 }

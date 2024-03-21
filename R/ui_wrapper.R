@@ -11,19 +11,16 @@
 shinyslack_app <- function(ui,
                            server,
                            team_id,
+                           ...,
                            expiration = 90,
-                           ...) {
+                           shinyslack_key = Sys.getenv("SHINYSLACK_KEY")) {
   dots <- rlang::list2(...)
   dots$options <- .parse_app_args(dots$options)
 
   return(
     rlang::exec(
       shiny::shinyApp,
-      ui = slack_shiny_ui(
-        ui = ui,
-        team_id = team_id,
-        expiration = expiration
-      ),
+      ui = slack_shiny_ui(ui, team_id, expiration, shinyslack_key),
       server = server,
       !!!dots
     )
@@ -48,7 +45,6 @@ shinyslack_app <- function(ui,
   return(options)
 }
 
-
 #' Require Slack login to a Shiny app
 #'
 #' This is a function factory that wraps a Shiny ui. If the user does not have a
@@ -61,42 +57,36 @@ shinyslack_app <- function(ui,
 #' @return A function defining the UI of a Shiny app (either with login or
 #'   without).
 #' @export
-slack_shiny_ui <- function(ui, team_id, expiration = 90) {
-  # Case 1: They already have a cookie token.
-  has_cookie_token <- scenes::set_scene(
-    ui = ui,
-    scenes::req_has_cookie(
-      cookie_name = .slack_token_cookie_name(team_id),
-      validation_fn = .validate_cookie_token,
-      team_id = team_id
-    )
-  )
+slack_shiny_ui <- function(ui,
+                           team_id,
+                           expiration = 90,
+                           shinyslack_key = Sys.getenv("SHINYSLACK_KEY")) {
+  has_cookie_token <- .ui_has_cookie_token(ui, team_id, shinyslack_key)
+  has_oauth_code <- .ui_has_oauth_code(team_id, expiration, shinyslack_key)
+  needs_login <- scenes::set_scene(ui = .do_login(team_id))
 
-  # Case1b: No cookies. #5
+  return(scenes::change_scene(has_cookie_token, has_oauth_code, needs_login))
+}
 
-  # Case 2: They are returning from the oauth endpoint, which has granted them
-  # an authorization code.
-  has_oauth_code <- scenes::set_scene(
-    ui = .parse_auth_code(
-      team_id = team_id,
-      expiration = expiration
-    ),
-    scenes::req_has_query(key = "code")
-  )
-
-  # Case 3 (default): They have neither a token nor a code to exchange for a
-  # token.
-  needs_login <- scenes::set_scene(
-    ui = .do_login(
-      team_id = team_id
-    )
-  )
-
+.ui_has_cookie_token <- function(ui, team_id, shinyslack_key) {
   return(
-    scenes::change_scene(
-      has_cookie_token,
-      has_oauth_code,
-      needs_login
+    scenes::set_scene(
+      ui = ui,
+      scenes::req_has_cookie(
+        cookie_name = .slack_token_cookie_name(team_id),
+        validation_fn = .validate_cookie_token,
+        team_id = team_id,
+        shinyslack_key = shinyslack_key
+      )
+    )
+  )
+}
+
+.ui_has_oauth_code <- function(team_id, expiration, shinyslack_key) {
+  return(
+    scenes::set_scene(
+      ui = .parse_auth_code(team_id, expiration, shinyslack_key),
+      scenes::req_has_query(key = "code")
     )
   )
 }

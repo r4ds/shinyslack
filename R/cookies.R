@@ -11,7 +11,6 @@
 #' Make Sure a Cookie Token Works
 #'
 #' @inheritParams .shared-parameters
-#' @inheritParams .shinyslack_decrypt
 #' @param cookie_token A character with the code used to authenticate the user.
 #'
 #' @return A logical indicating whether the token works for testing
@@ -20,18 +19,20 @@
 .validate_cookie_token <- function(cookie_token,
                                    team_id,
                                    shinyslack_key = Sys.getenv("SHINYSLACK_KEY")) {
-  cookie_token <- .shinyslack_decrypt(
-    cookie_token,
-    shinyslack_key = shinyslack_key
-  )
+  slack_token <- .shinyslack_decrypt(cookie_token, shinyslack_key)
+  return(.validate_slack_token(slack_token, team_id))
+}
 
-  Sys.setenv(SLACK_API_TOKEN = cookie_token)
+.validate_slack_token <- function(slack_token, team_id) {
+  if (is.null(slack_token) || slack_token == "bad_string") {
+    return(FALSE)
+  }
   auth_test <- slackcalls::post_slack(
     slack_method = "auth.test",
-    token = cookie_token
+    token = slack_token
   )
 
-  auth_test$ok && auth_test$team_id == team_id
+  return(auth_test$ok && auth_test$team_id == team_id)
 }
 
 #' Check Slack Login
@@ -43,17 +44,26 @@
 #' @return A [shiny::reactive()] which returns a logical indicating whether the
 #'   user is logged in with proper API access.
 #' @export
-check_login <- function(team_id) {
+check_login <- function(team_id,
+                        session = shiny::getDefaultReactiveDomain(),
+                        shinyslack_key = Sys.getenv("SHINYSLACK_KEY")) {
   return(
     shiny::reactive({
-      slack_cookie <- cookies::get_cookie(.slack_token_cookie_name(team_id))
+      slack_token <- .get_slack_cookie_token(team_id, shinyslack_key, session)
+      token_is_valid <- .validate_slack_token(slack_token, team_id)
+      if (token_is_valid) {
+        session$userData$shinyslack_api_key <- slack_token
+      }
 
-      return(
-        !is.null(slack_cookie) && .validate_cookie_token(
-          cookie_token = slack_cookie,
-          team_id = team_id
-        )
-      )
+      return(token_is_valid)
     })
   )
+}
+
+.get_slack_cookie_token <- function(team_id, shinyslack_key, session) {
+  cookie_token <- cookies::get_cookie(
+    .slack_token_cookie_name(team_id),
+    session = session
+  )
+  return(.shinyslack_decrypt(cookie_token, shinyslack_key))
 }
