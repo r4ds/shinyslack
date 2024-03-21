@@ -67,3 +67,16 @@ check_login <- function(team_id,
   )
   return(.shinyslack_decrypt(cookie_token, shinyslack_key))
 }
+
+.update_shinyslack_api_key <- function(slack_api_key,
+                                       team_id,
+                                       session,
+                                       shinyslack_key) {
+  if (is.null(slack_api_key)) {
+    slack_token <- .get_slack_cookie_token(team_id, shinyslack_key, session)
+    if (.validate_slack_token(slack_token, team_id)) {
+      session$userData$shinyslack_api_key <- slack_token
+    }
+  }
+  return(session$userData$shinyslack_api_key)
+}
