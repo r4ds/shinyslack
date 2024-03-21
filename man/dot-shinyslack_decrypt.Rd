@@ -4,15 +4,17 @@
 \alias{.shinyslack_decrypt}
 \title{Decrypt a String If Possible}
 \usage{
-.shinyslack_decrypt(string)
+.shinyslack_decrypt(string, shinyslack_key = Sys.getenv("SHINYSLACK_KEY"))
 }
 \arguments{
 \item{string}{A length-1 character to encrypt (or decrypt).}
+
+\item{shinyslack_key}{(optional) A key to use to encrypt the string. If not
+set, the string is returned unencrypted.}
 }
 \value{
-If \code{shinyslack_key} environment variable is set, the decrypted string
-(or "bad_string" if decryption fails). Otherwise the original string is
-returned.
+If \code{shinyslack_key} non-empty, the decrypted string (or "bad_string"
+if decryption fails). Otherwise the original string is returned.
 }
 \description{
 Decrypt a String If Possible

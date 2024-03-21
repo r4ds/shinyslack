@@ -13,7 +13,7 @@ Description: Login to Shiny apps using Slack, and use Slack information in those
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.1
 URL: https://github.com/r4ds/shinyslack
 BugReports: https://github.com/r4ds/shinyslack/issues
 Imports: 
@@ -27,7 +27,7 @@ Imports:
     slackteams,
     sodium
 Remotes: 
-    r4ds/scenes,
+    shinyworks/scenes,
     yonicd/slackcalls,
     yonicd/slackteams
 Depends: 
