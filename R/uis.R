@@ -6,25 +6,15 @@
 #' @return A ui function that takes a request and returns a [shiny::tagList()]
 #'   that sets the cookie then reloads the site.
 #' @keywords internal
-.parse_auth_code <- function(team_id, expiration) {
+.parse_auth_code <- function(team_id,
+                             expiration,
+                             shinyslack_key = Sys.getenv("SHINYSLACK_KEY")) {
   force(team_id)
   force(expiration)
   return(
     function(request) {
-      # Pass along query parameters from the request when we come back.
       redirect_url <- .extract_full_url(request)
-
-      # Exchange the code for a token.
-      token <- slackteams::add_team_code(
-        code = shiny::parseQueryString(request$QUERY_STRING)$code,
-        redirect_uri = redirect_url,
-        verbose = FALSE
-      )
-
-      # Encrypt the token.
-      token <- .shinyslack_encrypt(token)
-
-      # Have the browser set the cookie then load the updated url.
+      token <- .get_encrypted_token(request, redirect_url, shinyslack_key)
       return(
         cookies::set_cookie_response(
           cookie_name = .slack_token_cookie_name(team_id),
@@ -37,6 +27,15 @@
       )
     }
   )
+}
+
+.get_encrypted_token <- function(request, redirect_url, shinyslack_key) {
+  token <- slackteams::add_team_code(
+    code = shiny::parseQueryString(request$QUERY_STRING)$code,
+    redirect_uri = redirect_url,
+    verbose = FALSE
+  )
+  token <- .shinyslack_encrypt(token, shinyslack_key)
 }
 
 #' Perform the Login Via Slack

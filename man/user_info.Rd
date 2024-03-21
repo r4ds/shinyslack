@@ -5,7 +5,10 @@
 \title{Fetch Slack User Info}
 \usage{
 user_info(
-  components = c("user_id", "real_name", "display_name", "pronouns", "user_name")
+  components = c("user_id", "real_name", "display_name", "pronouns", "user_name"),
+  ...,
+  session = shiny::getDefaultReactiveDomain(),
+  slack_api_key = session$userData$shinyslack_api_key
 )
 }
 \arguments{
@@ -18,6 +21,13 @@ options are:
 \item pronouns: The pronouns set by this user, if any.
 \item user_name: You probably do not want this. It is a legacy piece of information.
 }}
+
+\item{session}{The shiny session object. The default
+\code{\link[shiny:domains]{shiny::getDefaultReactiveDomain()}} is likely always sufficient outside of
+tests.}
+
+\item{slack_api_key}{The Slack API key to use. The default value should
+likely always be used outside of tests.}
 }
 \value{
 A \code{\link[shiny:reactive]{shiny::reactive()}} with a named character vector.

@@ -2,6 +2,7 @@
 #'
 #' Get information about the logged-in user from the Slack API.
 #'
+#' @inheritParams .shared-parameters
 #' @param components A character vector of user components to include. Current
 #'   options are:
 #'   - user_id: The ID used to uniquely identify this user on this Slack team.
@@ -16,33 +17,34 @@ user_info <- function(components = c("user_id",
                                      "real_name",
                                      "display_name",
                                      "pronouns",
-                                     "user_name")) {
+                                     "user_name"),
+                      ...,
+                      session = shiny::getDefaultReactiveDomain(),
+                      slack_api_key = session$userData$shinyslack_api_key) {
   components <- match.arg(components, several.ok = TRUE)
+  rlang::check_dots_empty()
   return(
     shiny::reactive({
-      # We need basics from auth.test to get the rest.
-      basics <- slackcalls::post_slack("auth.test")
+      basics <- slackcalls::post_slack("auth.test", token = slack_api_key)
       if (all(components %in% c("user_id", "user_name"))) {
-        return(
-          c(
-            user_id = basics$user_id,
-            user_name = basics$user
-          )[components]
-        )
-      } else {
-        slack_info <- slackcalls::post_slack(
-          "users.info", user = basics$user_id
-        )$user
-        return(
-          c(
-            user_id = slack_info$id,
-            real_name = slack_info$profile$real_name,
-            display_name = slack_info$profile$display_name,
-            pronouns = slack_info$profile$pronouns,
-            user_name = slack_info$name
-          )[components]
-        )
+        return(c(user_id = basics$user_id, user_name = basics$user)[components])
       }
+      return(.get_more_user_info(basics$user_id, slack_api_key, components))
     })
+  )
+}
+
+.get_more_user_info <- function(user_id, slack_api_key, components) {
+  slack_info <- slackcalls::post_slack(
+    "users.info", user = user_id, token = slack_api_key
+  )$user
+  return(
+    c(
+      user_id = slack_info$id,
+      real_name = slack_info$profile$real_name,
+      display_name = slack_info$profile$display_name,
+      pronouns = slack_info$profile$pronouns,
+      user_name = slack_info$name
+    )[components]
   )
 }

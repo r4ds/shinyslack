@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  bookdown:
+  deploy-shinyapps:
     name: pr_check_shinyapps
     runs-on: ubuntu-latest
     steps:

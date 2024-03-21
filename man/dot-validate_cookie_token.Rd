@@ -4,13 +4,20 @@
 \alias{.validate_cookie_token}
 \title{Make Sure a Cookie Token Works}
 \usage{
-.validate_cookie_token(cookie_token, team_id)
+.validate_cookie_token(
+  cookie_token,
+  team_id,
+  shinyslack_key = Sys.getenv("SHINYSLACK_KEY")
+)
 }
 \arguments{
 \item{cookie_token}{A character with the code used to authenticate the user.}
 
 \item{team_id}{The Slack team ID through which the user is being
 authenticated.}
+
+\item{shinyslack_key}{(optional) A key to use to encrypt the string. If not
+set, the string is returned unencrypted.}
 }
 \value{
 A logical indicating whether the token works for testing

@@ -4,11 +4,22 @@
 \alias{check_login}
 \title{Check Slack Login}
 \usage{
-check_login(team_id)
+check_login(
+  team_id,
+  session = shiny::getDefaultReactiveDomain(),
+  shinyslack_key = Sys.getenv("SHINYSLACK_KEY")
+)
 }
 \arguments{
 \item{team_id}{The Slack team ID through which the user is being
 authenticated.}
+
+\item{session}{The shiny session object. The default
+\code{\link[shiny:domains]{shiny::getDefaultReactiveDomain()}} is likely always sufficient outside of
+tests.}
+
+\item{shinyslack_key}{(optional) A key to use to encrypt the string. If not
+set, the string is returned unencrypted.}
 }
 \value{
 A \code{\link[shiny:reactive]{shiny::reactive()}} which returns a logical indicating whether the
