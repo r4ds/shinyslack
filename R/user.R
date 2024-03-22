@@ -20,7 +20,7 @@ user_info <- function(components = c("user_id",
                                      "user_name"),
                       session = shiny::getDefaultReactiveDomain(),
                       slack_api_key = session$userData$shinyslack_api_key,
-                      team_id = session$userData$shinyslack_team_id,
+                      team_id = get_shinyslack_team_id(),
                       shinyslack_key = Sys.getenv("SHINYSLACK_KEY")) {
   components <- match.arg(components, several.ok = TRUE)
   return(

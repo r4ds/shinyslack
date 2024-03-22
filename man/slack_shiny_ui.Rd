@@ -33,3 +33,4 @@ This is a function factory that wraps a Shiny ui. If the user does not have a
 cookie for that site, they are prompted to login. Once they have a cookie,
 the UI displays as normal. #5
 }
+\keyword{internal}

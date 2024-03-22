@@ -44,7 +44,7 @@
 #' @return A [shiny::reactive()] which returns a logical indicating whether the
 #'   user is logged in with proper API access.
 #' @export
-check_login <- function(team_id,
+check_login <- function(team_id = get_shinyslack_team_id(),
                         session = shiny::getDefaultReactiveDomain(),
                         shinyslack_key = Sys.getenv("SHINYSLACK_KEY")) {
   return(

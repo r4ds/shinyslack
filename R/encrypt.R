@@ -9,10 +9,16 @@
 .shinyslack_encrypt <- function(string,
                                 shinyslack_key = Sys.getenv("SHINYSLACK_KEY")) {
   if (isTRUE(as.logical(nchar(shinyslack_key)))) {
-    cli::cli_inform(c("shinyslack_key set.", v = "Encrypting string."))
+    cli::cli_inform(c(
+      "shinyslack: shinyslack_key set.",
+      v = "Encrypting string."
+    ))
     string <- .sodium_encrypt(string, shinyslack_key)
   } else {
-    cli::cli_warn(c("shinyslack_key not found.", x = "String not encoded."))
+    cli::cli_warn(c(
+      "shinyslack: shinyslack_key not found.",
+      x = "String not encoded."
+    ))
   }
 
   return(string)

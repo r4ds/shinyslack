@@ -5,20 +5,14 @@
 \title{Fetch Slack User Info}
 \usage{
 user_info(
-  team_id,
-  ...,
   components = c("user_id", "real_name", "display_name", "pronouns", "user_name"),
   session = shiny::getDefaultReactiveDomain(),
   slack_api_key = session$userData$shinyslack_api_key,
+  team_id = get_shinyslack_team_id(),
   shinyslack_key = Sys.getenv("SHINYSLACK_KEY")
 )
 }
 \arguments{
-\item{team_id}{The Slack team ID through which the user is being
-authenticated.}
-
-\item{...}{These dots are for future extensions and must be empty.}
-
 \item{components}{A character vector of user components to include. Current
 options are:
 \itemize{
@@ -35,6 +29,9 @@ tests.}
 
 \item{slack_api_key}{The Slack API key to use. The default value should
 likely always be used outside of tests.}
+
+\item{team_id}{The Slack team ID through which the user is being
+authenticated.}
 
 \item{shinyslack_key}{(optional) A key to use to encrypt the string. If not
 set, the string is returned unencrypted.}

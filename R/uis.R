@@ -122,7 +122,7 @@
 
     if (is.null(url)) {
       cli::cli_abort(
-        message = c(x = "Could not determine url.")
+        message = c(x = "shinyslack: Could not determine url.")
       )
     }
 
