@@ -6,9 +6,10 @@
 \usage{
 user_info(
   components = c("user_id", "real_name", "display_name", "pronouns", "user_name"),
-  ...,
   session = shiny::getDefaultReactiveDomain(),
-  slack_api_key = session$userData$shinyslack_api_key
+  slack_api_key = session$userData$shinyslack_api_key,
+  team_id = get_shinyslack_team_id(),
+  shinyslack_key = Sys.getenv("SHINYSLACK_KEY")
 )
 }
 \arguments{
@@ -28,6 +29,12 @@ tests.}
 
 \item{slack_api_key}{The Slack API key to use. The default value should
 likely always be used outside of tests.}
+
+\item{team_id}{The Slack team ID through which the user is being
+authenticated.}
+
+\item{shinyslack_key}{(optional) A key to use to encrypt the string. If not
+set, the string is returned unencrypted.}
 }
 \value{
 A \code{\link[shiny:reactive]{shiny::reactive()}} with a named character vector.

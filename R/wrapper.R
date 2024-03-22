@@ -16,6 +16,7 @@ shinyslack_app <- function(ui,
                            shinyslack_key = Sys.getenv("SHINYSLACK_KEY")) {
   dots <- rlang::list2(...)
   dots$options <- .parse_app_args(dots$options)
+  set_shinyslack_team_id(team_id)
 
   return(
     rlang::exec(
@@ -56,7 +57,7 @@ shinyslack_app <- function(ui,
 #'
 #' @return A function defining the UI of a Shiny app (either with login or
 #'   without).
-#' @export
+#' @keywords internal
 slack_shiny_ui <- function(ui,
                            team_id,
                            expiration = 90,
@@ -89,4 +90,29 @@ slack_shiny_ui <- function(ui,
       scenes::req_has_query(key = "code")
     )
   )
+}
+
+#' Get the current team_id
+#'
+#' The `team_id` is set when an app is launched. In almost all cases, that value
+#' is the one you will want for any instances of `team_id`.
+#'
+#' @return A string representing the team_id.
+#' @export
+#'
+#' @examples
+#' # If no app is active, the team_id will be a zero-length character vector.
+#' get_shinyslack_team_id()
+#'
+#' set_shinyslack_team_id("T123456")
+#' get_shinyslack_team_id()
+get_shinyslack_team_id <- function() {
+  return(the$team_id)
+}
+
+#' @inheritParams .shared-parameters
+#' @rdname get_shinyslack_team_id
+set_shinyslack_team_id <- function(team_id) {
+  the$team_id <- team_id
+  return(the$team_id)
 }

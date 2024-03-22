@@ -18,18 +18,27 @@ user_info <- function(components = c("user_id",
                                      "display_name",
                                      "pronouns",
                                      "user_name"),
-                      ...,
                       session = shiny::getDefaultReactiveDomain(),
-                      slack_api_key = session$userData$shinyslack_api_key) {
+                      slack_api_key = session$userData$shinyslack_api_key,
+                      team_id = get_shinyslack_team_id(),
+                      shinyslack_key = Sys.getenv("SHINYSLACK_KEY")) {
   components <- match.arg(components, several.ok = TRUE)
-  rlang::check_dots_empty()
   return(
     shiny::reactive({
-      basics <- slackcalls::post_slack("auth.test", token = slack_api_key)
-      if (all(components %in% c("user_id", "user_name"))) {
-        return(c(user_id = basics$user_id, user_name = basics$user)[components])
+      slack_api_key <- .update_shinyslack_api_key(
+        slack_api_key,
+        team_id,
+        session,
+        shinyslack_key
+      )
+      if (!is.null(slack_api_key)) {
+        basics <- slackcalls::post_slack("auth.test", token = slack_api_key)
+        if (all(components %in% c("user_id", "user_name"))) {
+          return(c(user_id = basics$user_id, user_name = basics$user)[components])
+        }
+        return(.get_more_user_info(basics$user_id, slack_api_key, components))
       }
-      return(.get_more_user_info(basics$user_id, slack_api_key, components))
+      return(NULL)
     })
   )
 }
